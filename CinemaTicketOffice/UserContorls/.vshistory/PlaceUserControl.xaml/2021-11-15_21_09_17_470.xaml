@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="CinemaTicketOffice.UserContorls.PlaceUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CinemaTicketOffice.UserContorls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Border x:Name="border" CornerRadius="5" Height="30" Width="30" Margin="6" Background="#FFCB99CE" BorderBrush="#FF4C0867" BorderThickness="0.8" MouseEnter="border_MouseEnter" MouseLeave="border_MouseLeave" MouseDown="border_MouseDown" >
+            <Grid>
+                <TextBlock Text="{Binding Row}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Place}" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontWeight="Bold"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

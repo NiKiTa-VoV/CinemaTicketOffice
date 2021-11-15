@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище CinemaModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="cinemas">
+          <Key>
+            <PropertyRef Name="cinema_id" />
+          </Key>
+          <Property Name="cinema_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="image" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="clients">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="role_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="films">
+          <Key>
+            <PropertyRef Name="film_id" />
+          </Key>
+          <Property Name="film_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="release_date" Type="date" Nullable="false" />
+          <Property Name="duration" Type="int" Nullable="false" />
+          <Property Name="rating" Type="decimal" Precision="2" Scale="1" Nullable="false" />
+          <Property Name="image" Type="text" Nullable="false" />
+          <Property Name="description" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="roles">
+          <Key>
+            <PropertyRef Name="role_id" />
+          </Key>
+          <Property Name="role_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Cinema.dbo.sessions" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="sessions">
+          <Key>
+            <PropertyRef Name="cinema_id" />
+            <PropertyRef Name="film_id" />
+            <PropertyRef Name="date" />
+            <PropertyRef Name="time" />
+          </Key>
+          <Property Name="cinema_id" Type="int" Nullable="false" />
+          <Property Name="film_id" Type="int" Nullable="false" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="time" Type="time" Precision="0" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_roles_clients">
+          <End Role="roles" Type="Self.roles" Multiplicity="1" />
+          <End Role="clients" Type="Self.clients" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="roles">
+              <PropertyRef Name="role_id" />
+            </Principal>
+            <Dependent Role="clients">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sessions_cinemas">
+          <End Role="cinemas" Type="Self.cinemas" Multiplicity="1" />
+          <End Role="sessions" Type="Self.sessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cinemas">
+              <PropertyRef Name="cinema_id" />
+            </Principal>
+            <Dependent Role="sessions">
+              <PropertyRef Name="cinema_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sessions_films">
+          <End Role="films" Type="Self.films" Multiplicity="1" />
+          <End Role="sessions" Type="Self.sessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="films">
+              <PropertyRef Name="film_id" />
+            </Principal>
+            <Dependent Role="sessions">
+              <PropertyRef Name="film_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище CinemaModelContainer">
+          <EntitySet Name="cinemas" EntityType="Self.cinemas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="clients" EntityType="Self.clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="films" EntityType="Self.films" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="roles" EntityType="Self.roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sessions" EntityType="Self.sessions" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [sessions].[cinema_id] AS [cinema_id], 
+    [sessions].[film_id] AS [film_id], 
+    [sessions].[date] AS [date], 
+    [sessions].[time] AS [time]
+    FROM [dbo].[sessions] AS [sessions]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_roles_clients" Association="Self.FK_roles_clients">
+            <End Role="roles" EntitySet="roles" />
+            <End Role="clients" EntitySet="clients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sessions_cinemas" Association="Self.FK_sessions_cinemas">
+            <End Role="cinemas" EntitySet="cinemas" />
+            <End Role="sessions" EntitySet="sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sessions_films" Association="Self.FK_sessions_films">
+            <End Role="films" EntitySet="films" />
+            <End Role="sessions" EntitySet="sessions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CinemaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="cinemas">
+          <Key>
+            <PropertyRef Name="cinema_id" />
+          </Key>
+          <Property Name="cinema_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="image" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="sessions" Relationship="CinemaModel.FK_sessions_cinemas" FromRole="cinemas" ToRole="session" />
+        </EntityType>
+        <EntityType Name="clients">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="role_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="roles" Relationship="Self.FK_roles_clients" FromRole="clients" ToRole="roles" />
+        </EntityType>
+        <EntityType Name="roles">
+          <Key>
+            <PropertyRef Name="role_id" />
+          </Key>
+          <Property Name="role_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="clients" Relationship="Self.FK_roles_clients" FromRole="roles" ToRole="clients" />
+        </EntityType>
+        <Association Name="FK_roles_clients">
+          <End Role="roles" Type="Self.roles" Multiplicity="1" />
+          <End Role="clients" Type="Self.clients" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="roles">
+              <PropertyRef Name="role_id" />
+            </Principal>
+            <Dependent Role="clients">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CinemaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="cinemas" EntityType="Self.cinemas" />
+          <EntitySet Name="clients" EntityType="Self.clients" />
+          <EntitySet Name="roles" EntityType="Self.roles" />
+          <AssociationSet Name="FK_roles_clients" Association="Self.FK_roles_clients">
+            <End Role="roles" EntitySet="roles" />
+            <End Role="clients" EntitySet="clients" />
+          </AssociationSet>
+          <EntitySet Name="films1" EntityType="CinemaModel.films" />
+          <EntitySet Name="sessions1" EntityType="CinemaModel.sessions" />
+          <AssociationSet Name="FK_sessions_cinemas" Association="CinemaModel.FK_sessions_cinemas">
+            <End Role="cinemas" EntitySet="cinemas" />
+            <End Role="session" EntitySet="sessions1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sessions_films" Association="CinemaModel.FK_sessions_films">
+            <End Role="films" EntitySet="films1" />
+            <End Role="session" EntitySet="sessions1" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="films">
+          <Key>
+            <PropertyRef Name="film_id" />
+          </Key>
+          <Property Name="film_id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="release_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="duration" Type="Int32" Nullable="false" />
+          <Property Name="rating" Type="Decimal" Nullable="false" Precision="2" Scale="1" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="sessions" Relationship="CinemaModel.FK_sessions_films" FromRole="films" ToRole="session" />
+          <Property Name="image" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sessions">
+          <Key>
+            <PropertyRef Name="cinema_id" />
+            <PropertyRef Name="film_id" />
+            <PropertyRef Name="date" />
+            <PropertyRef Name="time" />
+          </Key>
+          <Property Name="cinema_id" Type="Int32" Nullable="false" />
+          <Property Name="film_id" Type="Int32" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="time" Type="Time" Nullable="false" Precision="0" />
+          <NavigationProperty Name="cinema" Relationship="CinemaModel.FK_sessions_cinemas" FromRole="session" ToRole="cinemas" />
+          <NavigationProperty Name="film" Relationship="CinemaModel.FK_sessions_films" FromRole="session" ToRole="films" />
+        </EntityType>
+        <Association Name="FK_sessions_cinemas">
+          <End Type="CinemaModel.cinemas" Role="cinemas" Multiplicity="1" />
+          <End Type="CinemaModel.sessions" Role="session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cinemas">
+              <PropertyRef Name="cinema_id" />
+            </Principal>
+            <Dependent Role="session">
+              <PropertyRef Name="cinema_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sessions_films">
+          <End Type="CinemaModel.films" Role="films" Multiplicity="1" />
+          <End Type="CinemaModel.sessions" Role="session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="films">
+              <PropertyRef Name="film_id" />
+            </Principal>
+            <Dependent Role="session">
+              <PropertyRef Name="film_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище CinemaModelContainer" CdmEntityContainer="CinemaEntities">
+          <EntitySetMapping Name="cinemas">
+            <EntityTypeMapping TypeName="CinemaModel.cinemas">
+              <MappingFragment StoreEntitySet="cinemas">
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="cinema_id" ColumnName="cinema_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="clients">
+            <EntityTypeMapping TypeName="CinemaModel.clients">
+              <MappingFragment StoreEntitySet="clients">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="roles">
+            <EntityTypeMapping TypeName="CinemaModel.roles">
+              <MappingFragment StoreEntitySet="roles">
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="films1">
+            <EntityTypeMapping TypeName="CinemaModel.films">
+              <MappingFragment StoreEntitySet="films">
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="rating" ColumnName="rating" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="release_date" ColumnName="release_date" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="film_id" ColumnName="film_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sessions1">
+            <EntityTypeMapping TypeName="CinemaModel.sessions">
+              <MappingFragment StoreEntitySet="sessions">
+                <ScalarProperty Name="time" ColumnName="time" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="film_id" ColumnName="film_id" />
+                <ScalarProperty Name="cinema_id" ColumnName="cinema_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
