@@ -34,6 +34,17 @@
           <Property Name="image" Type="text" Nullable="false" />
           <Property Name="description" Type="text" Nullable="false" />
         </EntityType>
+        <EntityType Name="reservations">
+          <Key>
+            <PropertyRef Name="reservation_id" />
+          </Key>
+          <Property Name="reservation_id" Type="int" Nullable="false" />
+          <Property Name="session_id" Type="int" Nullable="false" />
+          <Property Name="client_id" Type="int" Nullable="false" />
+          <Property Name="place" Type="int" Nullable="false" />
+          <Property Name="row" Type="int" Nullable="false" />
+          <Property Name="price" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="roles">
           <Key>
             <PropertyRef Name="role_id" />
@@ -41,16 +52,11 @@
           <Property Name="role_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "Cinema.dbo.sessions" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
         <EntityType Name="sessions">
           <Key>
-            <PropertyRef Name="cinema_id" />
-            <PropertyRef Name="film_id" />
-            <PropertyRef Name="date" />
-            <PropertyRef Name="time" />
-            <PropertyRef Name="type_session_id" />
+            <PropertyRef Name="session_id" />
           </Key>
+          <Property Name="session_id" Type="int" Nullable="false" />
           <Property Name="cinema_id" Type="int" Nullable="false" />
           <Property Name="film_id" Type="int" Nullable="false" />
           <Property Name="date" Type="date" Nullable="false" />
@@ -64,6 +70,30 @@
           <Property Name="type_session_id" Type="int" Nullable="false" />
           <Property Name="name" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
+        <Association Name="FK_reservations_clients">
+          <End Role="clients" Type="Self.clients" Multiplicity="1" />
+          <End Role="reservations" Type="Self.reservations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clients">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="reservations">
+              <PropertyRef Name="client_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_reservations_sessions">
+          <End Role="sessions" Type="Self.sessions" Multiplicity="1" />
+          <End Role="reservations" Type="Self.reservations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sessions">
+              <PropertyRef Name="session_id" />
+            </Principal>
+            <Dependent Role="reservations">
+              <PropertyRef Name="session_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_roles_clients">
           <End Role="roles" Type="Self.roles" Multiplicity="1" />
           <End Role="clients" Type="Self.clients" Multiplicity="0..1" />
@@ -116,17 +146,18 @@
           <EntitySet Name="cinemas" EntityType="Self.cinemas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="clients" EntityType="Self.clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="films" EntityType="Self.films" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="reservations" EntityType="Self.reservations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="roles" EntityType="Self.roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sessions" EntityType="Self.sessions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="type_sessions" EntityType="Self.type_sessions" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sessions" EntityType="Self.sessions" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [sessions].[cinema_id] AS [cinema_id], 
-    [sessions].[film_id] AS [film_id], 
-    [sessions].[date] AS [date], 
-    [sessions].[time] AS [time], 
-    [sessions].[type_session_id] AS [type_session_id]
-    FROM [dbo].[sessions] AS [sessions]</DefiningQuery>
-          </EntitySet>
+          <AssociationSet Name="FK_reservations_clients" Association="Self.FK_reservations_clients">
+            <End Role="clients" EntitySet="clients" />
+            <End Role="reservations" EntitySet="reservations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_reservations_sessions" Association="Self.FK_reservations_sessions">
+            <End Role="sessions" EntitySet="sessions" />
+            <End Role="reservations" EntitySet="reservations" />
+          </AssociationSet>
           <AssociationSet Name="FK_roles_clients" Association="Self.FK_roles_clients">
             <End Role="roles" EntitySet="roles" />
             <End Role="clients" EntitySet="clients" />
@@ -155,7 +186,7 @@
           <Property Name="cinema_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="image" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="dependentSessions" Relationship="CinemaModel.FK_sessions_cinemas" FromRole="cinemas" ToRole="session" />
+          <NavigationProperty Name="sessions" Relationship="CinemaModel.FK_sessions_cinemas" FromRole="Cinema" ToRole="session" />
         </EntityType>
         <EntityType Name="Client">
           <Key>
@@ -166,6 +197,7 @@
           <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="role_id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="dependentRoles" Relationship="Self.FK_roles_clients" FromRole="clients" ToRole="roles" />
+          <NavigationProperty Name="reservations" Relationship="CinemaModel.FK_reservations_clients" FromRole="Client" ToRole="reservation" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -196,18 +228,27 @@
             <End Role="clients" EntitySet="Clients1" />
           </AssociationSet>
           <EntitySet Name="Films1" EntityType="CinemaModel.Film" />
+          <EntitySet Name="TypeSessions" EntityType="CinemaModel.TypeSession" />
+          <EntitySet Name="Reservations1" EntityType="CinemaModel.Reservation" />
+          <AssociationSet Name="FK_reservations_clients" Association="CinemaModel.FK_reservations_clients">
+            <End Role="Client" EntitySet="Clients1" />
+            <End Role="reservation" EntitySet="Reservations1" />
+          </AssociationSet>
           <EntitySet Name="Sessions1" EntityType="CinemaModel.Session" />
           <AssociationSet Name="FK_sessions_cinemas" Association="CinemaModel.FK_sessions_cinemas">
-            <End Role="cinemas" EntitySet="Cinemas1" />
+            <End Role="Cinema" EntitySet="Cinemas1" />
             <End Role="session" EntitySet="Sessions1" />
           </AssociationSet>
           <AssociationSet Name="FK_sessions_films" Association="CinemaModel.FK_sessions_films">
-            <End Role="films" EntitySet="Films1" />
+            <End Role="Film" EntitySet="Films1" />
             <End Role="session" EntitySet="Sessions1" />
           </AssociationSet>
-          <EntitySet Name="TypeSessions" EntityType="CinemaModel.TypeSession" />
+          <AssociationSet Name="FK_reservations_sessions" Association="CinemaModel.FK_reservations_sessions">
+            <End Role="session" EntitySet="Sessions1" />
+            <End Role="reservation" EntitySet="Reservations1" />
+          </AssociationSet>
           <AssociationSet Name="FK_sessions_type_sessions" Association="CinemaModel.FK_sessions_type_sessions">
-            <End Role="type_sessions" EntitySet="TypeSessions" />
+            <End Role="TypeSession" EntitySet="TypeSessions" />
             <End Role="session" EntitySet="Sessions1" />
           </AssociationSet>
         </EntityContainer>
@@ -221,31 +262,62 @@
           <Property Name="duration" Type="Int32" Nullable="false" />
           <Property Name="rating" Type="Decimal" Nullable="false" Precision="2" Scale="1" />
           <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="dependentSessions" Relationship="CinemaModel.FK_sessions_films" FromRole="films" ToRole="session" />
           <Property Name="image" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="sessions" Relationship="CinemaModel.FK_sessions_films" FromRole="Film" ToRole="session" />
         </EntityType>
-        <EntityType Name="Session">
+        <EntityType Name="TypeSession">
           <Key>
-            <PropertyRef Name="cinema_id" />
-            <PropertyRef Name="film_id" />
-            <PropertyRef Name="date" />
-            <PropertyRef Name="time" />
             <PropertyRef Name="type_session_id" />
           </Key>
+          <Property Name="type_session_id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="sessions" Relationship="CinemaModel.FK_sessions_type_sessions" FromRole="TypeSession" ToRole="session" />
+        </EntityType>
+        <EntityType Name="Reservation">
+          <Key>
+            <PropertyRef Name="reservation_id" />
+          </Key>
+          <Property Name="reservation_id" Type="Int32" Nullable="false" />
+          <Property Name="session_id" Type="Int32" Nullable="false" />
+          <Property Name="client_id" Type="Int32" Nullable="false" />
+          <Property Name="place" Type="Int32" Nullable="false" />
+          <Property Name="row" Type="Int32" Nullable="false" />
+          <Property Name="price" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="client" Relationship="CinemaModel.FK_reservations_clients" FromRole="reservation" ToRole="Client" />
+          <NavigationProperty Name="session" Relationship="CinemaModel.FK_reservations_sessions" FromRole="reservation" ToRole="session" />
+        </EntityType>
+        <Association Name="FK_reservations_clients">
+          <End Type="CinemaModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="CinemaModel.Reservation" Role="reservation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="reservation">
+              <PropertyRef Name="client_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="session_id" />
+          </Key>
+          <Property Name="session_id" Type="Int32" Nullable="false" />
           <Property Name="cinema_id" Type="Int32" Nullable="false" />
           <Property Name="film_id" Type="Int32" Nullable="false" />
           <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="time" Type="Time" Nullable="false" Precision="0" />
-          <NavigationProperty Name="cinema" Relationship="CinemaModel.FK_sessions_cinemas" FromRole="session" ToRole="cinemas" />
-          <NavigationProperty Name="film" Relationship="CinemaModel.FK_sessions_films" FromRole="session" ToRole="films" />
           <Property Name="type_session_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="type_sessions" Relationship="CinemaModel.FK_sessions_type_sessions" FromRole="session" ToRole="type_sessions" />
+          <NavigationProperty Name="cinema" Relationship="CinemaModel.FK_sessions_cinemas" FromRole="session" ToRole="Cinema" />
+          <NavigationProperty Name="film" Relationship="CinemaModel.FK_sessions_films" FromRole="session" ToRole="Film" />
+          <NavigationProperty Name="reservations" Relationship="CinemaModel.FK_reservations_sessions" FromRole="session" ToRole="reservation" />
+          <NavigationProperty Name="type_sessions" Relationship="CinemaModel.FK_sessions_type_sessions" FromRole="session" ToRole="TypeSession" />
         </EntityType>
         <Association Name="FK_sessions_cinemas">
-          <End Type="CinemaModel.Cinema" Role="cinemas" Multiplicity="1" />
+          <End Type="CinemaModel.Cinema" Role="Cinema" Multiplicity="1" />
           <End Type="CinemaModel.Session" Role="session" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="cinemas">
+            <Principal Role="Cinema">
               <PropertyRef Name="cinema_id" />
             </Principal>
             <Dependent Role="session">
@@ -254,10 +326,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_sessions_films">
-          <End Type="CinemaModel.Film" Role="films" Multiplicity="1" />
+          <End Type="CinemaModel.Film" Role="Film" Multiplicity="1" />
           <End Type="CinemaModel.Session" Role="session" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="films">
+            <Principal Role="Film">
               <PropertyRef Name="film_id" />
             </Principal>
             <Dependent Role="session">
@@ -265,19 +337,23 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="TypeSession">
-          <Key>
-            <PropertyRef Name="type_session_id" />
-          </Key>
-          <Property Name="type_session_id" Type="Int32" Nullable="false" />
-          <Property Name="name" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="dependentSessions" Relationship="CinemaModel.FK_sessions_type_sessions" FromRole="type_sessions" ToRole="session" />
-        </EntityType>
+        <Association Name="FK_reservations_sessions">
+          <End Type="CinemaModel.Session" Role="session" Multiplicity="1" />
+          <End Type="CinemaModel.Reservation" Role="reservation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="session">
+              <PropertyRef Name="session_id" />
+            </Principal>
+            <Dependent Role="reservation">
+              <PropertyRef Name="session_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_sessions_type_sessions">
-          <End Type="CinemaModel.TypeSession" Role="type_sessions" Multiplicity="1" />
+          <End Type="CinemaModel.TypeSession" Role="TypeSession" Multiplicity="1" />
           <End Type="CinemaModel.Session" Role="session" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="type_sessions">
+            <Principal Role="TypeSession">
               <PropertyRef Name="type_session_id" />
             </Principal>
             <Dependent Role="session">
@@ -331,6 +407,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TypeSessions">
+            <EntityTypeMapping TypeName="CinemaModel.TypeSession">
+              <MappingFragment StoreEntitySet="type_sessions">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="type_session_id" ColumnName="type_session_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reservations1">
+            <EntityTypeMapping TypeName="CinemaModel.Reservation">
+              <MappingFragment StoreEntitySet="reservations">
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="row" ColumnName="row" />
+                <ScalarProperty Name="place" ColumnName="place" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="session_id" ColumnName="session_id" />
+                <ScalarProperty Name="reservation_id" ColumnName="reservation_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Sessions1">
             <EntityTypeMapping TypeName="CinemaModel.Session">
               <MappingFragment StoreEntitySet="sessions">
@@ -339,14 +435,7 @@
                 <ScalarProperty Name="date" ColumnName="date" />
                 <ScalarProperty Name="film_id" ColumnName="film_id" />
                 <ScalarProperty Name="cinema_id" ColumnName="cinema_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TypeSessions">
-            <EntityTypeMapping TypeName="CinemaModel.TypeSession">
-              <MappingFragment StoreEntitySet="type_sessions">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="type_session_id" ColumnName="type_session_id" />
+                <ScalarProperty Name="session_id" ColumnName="session_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

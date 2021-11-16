@@ -4,16 +4,19 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4f9abfc9ab4c44c38a9209b38b9d2a82" Name="Diagram1">
+      <Diagram DiagramId="4f9abfc9ab4c44c38a9209b38b9d2a82" Name="Diagram1" ZoomLevel="85">
         <EntityTypeShape EntityType="CinemaModel.Cinema" Width="1.5" PointX="5.5" PointY="1.5" IsExpanded="true" />
         <EntityTypeShape EntityType="CinemaModel.Client" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="CinemaModel.Role" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
         <AssociationConnector Association="CinemaModel.FK_roles_clients" ManuallyRouted="false" />
         <EntityTypeShape EntityType="CinemaModel.Film" Width="1.5" PointX="5.375" PointY="4" />
-        <EntityTypeShape EntityType="CinemaModel.Session" Width="1.5" PointX="7.75" PointY="2.75" />
+        <EntityTypeShape EntityType="CinemaModel.TypeSession" Width="1.5" PointX="0.75" PointY="3.875" />
+        <EntityTypeShape EntityType="CinemaModel.Reservation" Width="1.5" PointX="10" PointY="2" />
+        <AssociationConnector Association="CinemaModel.FK_reservations_clients" />
+        <EntityTypeShape EntityType="CinemaModel.Session" Width="1.5" PointX="7.75" PointY="2.5" />
         <AssociationConnector Association="CinemaModel.FK_sessions_cinemas" />
         <AssociationConnector Association="CinemaModel.FK_sessions_films" />
-        <EntityTypeShape EntityType="CinemaModel.TypeSession" Width="1.5" PointX="0.75" PointY="3.875" />
+        <AssociationConnector Association="CinemaModel.FK_reservations_sessions" />
         <AssociationConnector Association="CinemaModel.FK_sessions_type_sessions" />
       </Diagram>
     </edmx:Diagrams>

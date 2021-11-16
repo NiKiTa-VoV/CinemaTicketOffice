@@ -14,6 +14,13 @@ namespace CinemaTicketOffice.DateBase
     
     public partial class Session
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Session()
+        {
+            this.reservations = new HashSet<Reservation>();
+        }
+    
+        public int session_id { get; set; }
         public int cinema_id { get; set; }
         public int film_id { get; set; }
         public System.DateTime date { get; set; }
@@ -22,6 +29,8 @@ namespace CinemaTicketOffice.DateBase
     
         public virtual Cinema cinema { get; set; }
         public virtual Film film { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Reservation> reservations { get; set; }
         public virtual TypeSession type_sessions { get; set; }
     }
 }

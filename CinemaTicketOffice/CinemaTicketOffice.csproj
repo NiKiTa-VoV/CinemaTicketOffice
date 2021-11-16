@@ -79,6 +79,9 @@
       <DependentUpon>ModelCinema.tt</DependentUpon>
     </Compile>
     <Compile Include="DateBase\ModelCinemaHandler.cs" />
+    <Compile Include="DateBase\Reservation.cs">
+      <DependentUpon>ModelCinema.tt</DependentUpon>
+    </Compile>
     <Compile Include="DateBase\Role.cs">
       <DependentUpon>ModelCinema.tt</DependentUpon>
     </Compile>

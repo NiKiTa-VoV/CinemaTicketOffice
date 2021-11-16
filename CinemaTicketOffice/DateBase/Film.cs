@@ -17,7 +17,7 @@ namespace CinemaTicketOffice.DateBase
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Film()
         {
-            this.dependentSessions = new HashSet<Session>();
+            this.sessions = new HashSet<Session>();
         }
     
         public int film_id { get; set; }
@@ -29,6 +29,6 @@ namespace CinemaTicketOffice.DateBase
         public string image { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Session> dependentSessions { get; set; }
+        public virtual ICollection<Session> sessions { get; set; }
     }
 }

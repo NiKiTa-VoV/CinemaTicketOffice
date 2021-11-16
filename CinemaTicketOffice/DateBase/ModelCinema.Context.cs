@@ -29,7 +29,8 @@ namespace CinemaTicketOffice.DateBase
         public virtual DbSet<Client> Clients1 { get; set; }
         public virtual DbSet<Role> Roles1 { get; set; }
         public virtual DbSet<Film> Films1 { get; set; }
-        public virtual DbSet<Session> Sessions1 { get; set; }
         public virtual DbSet<TypeSession> TypeSessions { get; set; }
+        public virtual DbSet<Reservation> Reservations1 { get; set; }
+        public virtual DbSet<Session> Sessions1 { get; set; }
     }
 }

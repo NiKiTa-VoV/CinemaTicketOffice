@@ -13,7 +13,7 @@ namespace CinemaTicketOffice.UserContorls
         private Brush _color;
         private readonly HallPage page;
         private bool selected;
-
+        private bool booked;
 
         public int Place { get; set; }
         public int Row { get; set; }
@@ -24,13 +24,24 @@ namespace CinemaTicketOffice.UserContorls
             DataContext = this;
         }
 
-        public PlaceUserControl(int place, int row, HallPage page)
+        public PlaceUserControl(int place, int row, bool selected, bool booked, HallPage page)
         {
             InitializeComponent();
             _color = border.Background;
+            if (selected)
+            {
+                border.Background = (Brush)new BrushConverter().ConvertFrom("#FF948BBD");
+                page.AddPlace(this);
+            }
+            if (booked && !selected)
+            {
+                border.Background = (Brush)new BrushConverter().ConvertFrom("#FFA7A1A7");
+            }
             DataContext = this;
             Place = place;
             Row = row;
+            this.selected = selected;
+            this.booked = booked && !selected;
             this.page = page;
         }
 
@@ -38,13 +49,17 @@ namespace CinemaTicketOffice.UserContorls
         {
             if (sender is Border border)
             {
+                if (booked)
+                {
+                    return;
+                }
                 if (!selected)
                 {
                     border.Background = (Brush)new BrushConverter().ConvertFrom("#FFA475A7");
                 }
                 else
                 {
-                    border.Background = (Brush)new BrushConverter().ConvertFrom("#FFC1B9C1");
+                    border.Background = (Brush)new BrushConverter().ConvertFrom("#FFC4B9F4");
                 }
             }
         }
@@ -53,13 +68,17 @@ namespace CinemaTicketOffice.UserContorls
         {
             if (sender is Border border)
             {
+                if (booked)
+                {
+                    return;
+                }
                 if (!selected)
                 {
                     border.Background = _color;
                 }
                 else
                 {
-                    border.Background = (Brush)new BrushConverter().ConvertFrom("#FFA7A1A7");
+                    border.Background = (Brush)new BrushConverter().ConvertFrom("#FF948BBD");
                 }
             }
         }
@@ -68,13 +87,17 @@ namespace CinemaTicketOffice.UserContorls
         {
             if (sender is Border border)
             {
+                if (booked)
+                {
+                    return;
+                }
                 if (!selected)
                 {
                     border.Background = (Brush)new BrushConverter().ConvertFrom("#FF9B709E");
                 }
                 else
                 {
-                    border.Background = (Brush)new BrushConverter().ConvertFrom("#FF7F7F7F");
+                    border.Background = (Brush)new BrushConverter().ConvertFrom("#FF8E83C3");
                 }
             }
         }
@@ -83,14 +106,27 @@ namespace CinemaTicketOffice.UserContorls
         {
             if (sender is Border border)
             {
+                if (booked)
+                {
+                    return;
+                }
                 if (!selected)
                 {
-                    border.Background = (Brush)new BrushConverter().ConvertFrom("#FFA475A7");
-                    selected = !selected;
+                    if (page.Count >= HallPage.MaxCount)
+                    {
+                        border.Background = (Brush)new BrushConverter().ConvertFrom("#FFA475A7");
+                    }
+                    else
+                    {
+                        page.AddPlace(this);
+                        border.Background = (Brush)new BrushConverter().ConvertFrom("#FFC4B9F4");
+                        selected = !selected;
+                    }
                 }
                 else
                 {
-                    border.Background = (Brush)new BrushConverter().ConvertFrom("#FFC1B9C1");
+                    page.RemovePlace(this);
+                    border.Background = (Brush)new BrushConverter().ConvertFrom("#FFA475A7");
                     selected = !selected;
                 }
             }

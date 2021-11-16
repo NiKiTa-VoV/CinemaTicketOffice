@@ -27,8 +27,7 @@ namespace CinemaTicketOffice
         {
             InitializeComponent();
             Manager.mainFrame = mainFrame;
-            //mainFrame.Content = new AuthorizationPage();
-            mainFrame.Content = new MainPage();
+            mainFrame.Content = new AuthorizationPage();
         }
     }
 }

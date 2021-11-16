@@ -52,10 +52,23 @@ namespace CinemaTicketOffice.pages
             {
                 System.Data.Entity.DbSet<Session> sessions = ModelCinemaHandler.getContext().Sessions1;
                 string v = dateTime.Date.ToString().Split(' ')[0];
-                System.Data.SqlClient.SqlParameter dateParam = new System.Data.SqlClient.SqlParameter("@date", dateTime.Date.ToString().Split(' ')[0]);
-                System.Data.SqlClient.SqlParameter filmParam = new System.Data.SqlClient.SqlParameter("@film_id", film.film_id);
-                List<Session> sessions1 = sessions.SqlQuery($"SELECT * FROM sessions WHERE date = @date AND film_id = @film_id", dateParam, filmParam).ToList();
-                return sessions1;
+                if (true)
+                {
+
+                }
+                string date = dateTime.Date.ToString("d");
+                string dateActual = DateTime.Now.ToString("d");
+                var dateParam = new System.Data.SqlClient.SqlParameter("@date", date);
+                var filmParam = new System.Data.SqlClient.SqlParameter("@film_id", film.film_id);
+                var timeParam = new System.Data.SqlClient.SqlParameter("@time", "00:00:00");
+                if (date == dateActual)
+                {
+                    dateParam = new System.Data.SqlClient.SqlParameter("@date", dateActual);
+                    timeParam = new System.Data.SqlClient.SqlParameter("@time", DateTime.Now.ToString("HH:mm"));
+                }
+                //System.Data.SqlClient.SqlParameter filmParam = new System.Data.SqlClient.SqlParameter("@film_id", TimeSpan.);
+                List<Session> sessionsSelect = sessions.SqlQuery($"SELECT * FROM sessions WHERE date = @date AND time >= @time AND film_id = @film_id", dateParam, timeParam, filmParam).ToList();
+                return sessionsSelect;
             }
             catch
             {

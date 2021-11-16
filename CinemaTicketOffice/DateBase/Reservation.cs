@@ -12,21 +12,16 @@ namespace CinemaTicketOffice.DateBase
     using System;
     using System.Collections.Generic;
     
-    public partial class Client
+    public partial class Reservation
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Client()
-        {
-            this.reservations = new HashSet<Reservation>();
-        }
+        public int reservation_id { get; set; }
+        public int session_id { get; set; }
+        public int client_id { get; set; }
+        public int place { get; set; }
+        public int row { get; set; }
+        public int price { get; set; }
     
-        public int user_id { get; set; }
-        public string login { get; set; }
-        public string password { get; set; }
-        public int role_id { get; set; }
-    
-        public virtual Role dependentRoles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Reservation> reservations { get; set; }
+        public virtual Client client { get; set; }
+        public virtual Session session { get; set; }
     }
 }

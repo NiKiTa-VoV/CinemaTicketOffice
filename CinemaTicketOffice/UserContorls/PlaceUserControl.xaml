@@ -9,8 +9,8 @@
     <Grid>
         <Border x:Name="border" CornerRadius="5" Height="30" Width="30" Margin="6" Background="#FFBA8BBD" BorderBrush="#FF4C0867" BorderThickness="0.8" MouseEnter="border_MouseEnter" MouseLeave="border_MouseLeave" MouseDown="border_MouseDown" MouseUp="border_MouseUp">
             <Grid>
-                <TextBlock Text="{Binding Row}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Place}" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Row}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" Margin="1"/>
+                <TextBlock Text="{Binding Place}" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontWeight="Bold" Margin="1"/>
             </Grid>
         </Border>
     </Grid>
