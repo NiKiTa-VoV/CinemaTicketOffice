@@ -22,6 +22,6 @@ namespace CinemaTicketOffice.DateBase
         public int price { get; set; }
     
         public virtual Client client { get; set; }
-        public virtual Session session { get; set; }
+        public virtual Session sessions { get; set; }
     }
 }

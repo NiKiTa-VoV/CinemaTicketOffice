@@ -25,12 +25,12 @@ namespace CinemaTicketOffice.DateBase
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Cinema> Cinemas1 { get; set; }
-        public virtual DbSet<Client> Clients1 { get; set; }
-        public virtual DbSet<Role> Roles1 { get; set; }
-        public virtual DbSet<Film> Films1 { get; set; }
-        public virtual DbSet<TypeSession> TypeSessions { get; set; }
-        public virtual DbSet<Reservation> Reservations1 { get; set; }
-        public virtual DbSet<Session> Sessions1 { get; set; }
+        public virtual DbSet<Cinema> cinemas { get; set; }
+        public virtual DbSet<Client> clients { get; set; }
+        public virtual DbSet<Film> films { get; set; }
+        public virtual DbSet<Reservation> reservations { get; set; }
+        public virtual DbSet<Role> roles { get; set; }
+        public virtual DbSet<Session> sessions { get; set; }
+        public virtual DbSet<TypeSession> type_sessions { get; set; }
     }
 }

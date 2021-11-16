@@ -52,7 +52,7 @@ namespace CinemaTicketOffice.pages
         {
             try
             {
-                System.Data.Entity.DbSet<Client> clients = ModelCinemaHandler.getContext().Clients1;
+                System.Data.Entity.DbSet<Client> clients = ModelCinemaHandler.getContext().clients;
                 System.Data.SqlClient.SqlParameter loginParam = new System.Data.SqlClient.SqlParameter("@login", tbLogin.Text);
                 System.Data.SqlClient.SqlParameter passwordParam = new System.Data.SqlClient.SqlParameter("@password", password);
                 List<Client> clientsSelect = clients.SqlQuery($"SELECT * FROM clients WHERE login = @login AND password = @password", loginParam, passwordParam).ToList();

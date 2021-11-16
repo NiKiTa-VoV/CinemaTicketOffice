@@ -17,6 +17,6 @@ namespace CinemaTicketOffice.DateBase
         public int role_id { get; set; }
         public string name { get; set; }
     
-        public virtual Client dependentClients { get; set; }
+        public virtual Client clients { get; set; }
     }
 }

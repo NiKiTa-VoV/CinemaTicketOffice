@@ -25,8 +25,8 @@ namespace CinemaTicketOffice.DateBase
         public System.DateTime release_date { get; set; }
         public int duration { get; set; }
         public decimal rating { get; set; }
-        public string description { get; set; }
         public string image { get; set; }
+        public string description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> sessions { get; set; }

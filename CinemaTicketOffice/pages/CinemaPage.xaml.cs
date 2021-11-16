@@ -30,7 +30,7 @@ namespace CinemaTicketOffice.pages
             try
             {
                 CinemaEntities cinemaEntities = ModelCinemaHandler.getContext();
-                foreach (var cinema in cinemaEntities.Cinemas1)
+                foreach (var cinema in cinemaEntities.cinemas)
                 {
                     spCinemas.Children.Add(new CinemaUserControl(cinema));
                 }

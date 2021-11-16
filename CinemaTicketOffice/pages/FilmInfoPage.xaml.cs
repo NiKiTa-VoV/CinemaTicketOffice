@@ -50,7 +50,7 @@ namespace CinemaTicketOffice.pages
         {
             try
             {
-                System.Data.Entity.DbSet<Session> sessions = ModelCinemaHandler.getContext().Sessions1;
+                System.Data.Entity.DbSet<Session> sessions = ModelCinemaHandler.getContext().sessions;
                 string v = dateTime.Date.ToString().Split(' ')[0];
                 if (true)
                 {

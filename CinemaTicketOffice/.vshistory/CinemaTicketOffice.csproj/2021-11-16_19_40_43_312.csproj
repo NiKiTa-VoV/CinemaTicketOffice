@@ -73,20 +73,10 @@
     <Compile Include="DateBase\Film.cs">
       <DependentUpon>ModelCinema.tt</DependentUpon>
     </Compile>
-    <Compile Include="DateBase\ModelCinema.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModelCinema.Context.tt</DependentUpon>
-    </Compile>
     <Compile Include="DateBase\ModelCinema.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ModelCinema.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DateBase\ModelCinema.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModelCinema.edmx</DependentUpon>
     </Compile>
     <Compile Include="DateBase\ModelCinemaHandler.cs" />
     <Compile Include="DateBase\Reservation.cs">
@@ -187,6 +177,16 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateBase\ModelCinema.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelCinema.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DateBase\ModelCinema.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelCinema.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -225,6 +225,16 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DateBase\ModelCinema.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModelCinema.edmx</DependentUpon>
+      <LastGenOutput>ModelCinema.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DateBase\ModelCinema.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModelCinema.edmx</DependentUpon>
+      <LastGenOutput>ModelCinema.cs</LastGenOutput>
+    </Content>
     <Resource Include="resources\film\1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -243,18 +253,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="windows\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DateBase\ModelCinema.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModelCinema.edmx</DependentUpon>
-      <LastGenOutput>ModelCinema.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="DateBase\ModelCinema.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModelCinema.edmx</DependentUpon>
-      <LastGenOutput>ModelCinema.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

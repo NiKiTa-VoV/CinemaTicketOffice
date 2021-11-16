@@ -25,8 +25,8 @@ namespace CinemaTicketOffice.DateBase
         public string password { get; set; }
         public int role_id { get; set; }
     
-        public virtual Role dependentRoles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Reservation> reservations { get; set; }
+        public virtual Role role { get; set; }
     }
 }

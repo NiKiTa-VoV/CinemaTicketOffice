@@ -102,7 +102,7 @@ namespace CinemaTicketOffice.pages
         {
             try
             {
-                var reservations = ModelCinemaHandler.getContext().Reservations1;
+                var reservations = ModelCinemaHandler.getContext().reservations;
                 SqlParameter sessionParam = new SqlParameter("@session_id", session.session_id);
                 System.Data.Entity.Infrastructure.DbSqlQuery<Reservation> reservationsSelect = reservations.SqlQuery("SELECT * FROM reservations WHERE session_id = @session_id", sessionParam);
                 foreach (var reservation in reservationsSelect)
@@ -121,7 +121,7 @@ namespace CinemaTicketOffice.pages
         {
             try
             {
-                var reservations = ModelCinemaHandler.getContext().Reservations1;
+                var reservations = ModelCinemaHandler.getContext().reservations;
                 SqlParameter sessionParam = new SqlParameter("@session_id", session.session_id);
                 SqlParameter clientParam = new SqlParameter("@client_id", Manager.client.user_id);
                 System.Data.Entity.Infrastructure.DbSqlQuery<Reservation> reservationsSelect = reservations.SqlQuery("SELECT * FROM reservations WHERE session_id = @session_id AND client_id = @client_id", sessionParam, clientParam);

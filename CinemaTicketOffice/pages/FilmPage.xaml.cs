@@ -23,7 +23,7 @@ namespace CinemaTicketOffice.pages
             Manager.mainPage.btnBack.Visibility = Visibility.Visible;
             try
             {
-                System.Data.Entity.DbSet<Film> films = ModelCinemaHandler.getContext().Films1;
+                System.Data.Entity.DbSet<Film> films = ModelCinemaHandler.getContext().films;
                 System.Data.SqlClient.SqlParameter cinemaParam = new System.Data.SqlClient.SqlParameter("@cinema_id", cinema.cinema_id);
                 List<Film> filmsSelect = films.SqlQuery("SELECT * FROM films WHERE film_id IN (SELECT DISTINCT film_id FROM sessions WHERE cinema_id = @cinema_id)", cinemaParam).ToList();
                 foreach (var film in filmsSelect)
